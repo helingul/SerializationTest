@@ -82,11 +82,11 @@ namespace MultipleClassOdinTestSerializer
         public void SaveGameWithObject()
         {
 
-            Dictionary<string, object> state = new Dictionary<string, object>();
+            List<object> state = new List<object>();
 
             foreach (var saveable in saveables)
             {
-                state[saveable.GetSaveKey()] = saveable.SaveWithObject();
+                state.Add(saveable.SaveWithObject());
             }
 
             byte[] bytes = SerializationUtility.SerializeValue(state, DataFormat.JSON);
@@ -100,14 +100,11 @@ namespace MultipleClassOdinTestSerializer
             byte[] bytes = File.ReadAllBytes(filePath);
 
             var state = SerializationUtility
-                .DeserializeValue<Dictionary<string, object>>(bytes, DataFormat.JSON);
+                .DeserializeValue<List<object>>(bytes, DataFormat.JSON);
 
-            foreach (var saveable in saveables)
+            for(int i = 0 ; i < saveables.Count; ++i)
             {
-                if (state.TryGetValue(saveable.GetSaveKey(), out var savedState))
-                {
-                    saveable.LoadWithObject(savedState);
-                }
+                saveables[i].LoadWithObject(state[i]);
             }
 
             Debug.Log("Game Loaded!");

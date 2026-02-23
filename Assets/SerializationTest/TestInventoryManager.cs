@@ -48,15 +48,12 @@ namespace MultipleClassOdinTestSerializer
         public void LoadWithByteArray(byte[] state)
         {
             saveData = SerializationUtility.DeserializeValue<InventorySaveData>(state, DataFormat.JSON);
-            Debug.Log("Loaded Gold: " + saveData.gold);
         }
 
         ///////////////////////////////////////////////////////////////////////////
         /// Save using object
         public object SaveWithObject()
         {
-            saveData.testDictionary.Add("key" + testIndex, testIndex);
-            testIndex++;
             return saveData;
         }
         public void LoadWithObject(object state)
