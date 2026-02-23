@@ -35,7 +35,9 @@ namespace MultipleClassOdinTestSerializer
         {
             filePath = Path.Combine(Application.persistentDataPath, "multipleManagerSave.json");
 
-            saveables = FindObjectsOfType<MonoBehaviour>(true)
+            saveables = FindObjectsByType<MonoBehaviour>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None)
                 .OfType<ISaveable>()
                 .ToList();
         }

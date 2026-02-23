@@ -1,3 +1,4 @@
+using FinalSaveSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ public enum SerializationType
     MultipleClassSerializationWithObject_Encrpyted,
     UnityJsonSerialization,
     NewtonsoftJsonSerialization,
+    TestSerializerWithOdin,
 
 }
 
@@ -20,6 +22,7 @@ public class SerializationManager : MonoBehaviour
 {
     public MultipleClassOdinTestSerializer.MultipleClassSerialization multipleClassSerialization;
     public BasicOdinSerializer.OdinTestSerializer odinTestSerializer;
+    public FinalSaveSystem.SaveManager saveManager;
 
     public SerializationType serializationType;
     public void Save()
@@ -47,6 +50,9 @@ public class SerializationManager : MonoBehaviour
                 break;
             case SerializationType.NewtonsoftJsonSerialization:
                 multipleClassSerialization.SaveGameWithNewtonSoftJson();
+                break;
+            case SerializationType.TestSerializerWithOdin:
+                saveManager.SaveGame();
                 break;
             default:
                 break;
@@ -78,6 +84,9 @@ public class SerializationManager : MonoBehaviour
                 break;
             case SerializationType.NewtonsoftJsonSerialization:
                 multipleClassSerialization.LoadGameWithNewtonSoftJson();
+                break;
+            case SerializationType.TestSerializerWithOdin:
+                saveManager.LoadGame();
                 break;
             default:
                 break;

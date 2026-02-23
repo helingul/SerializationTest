@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using System.IO.Compression;
 using System.IO;
+using System.IO.Compression;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using UnityEngine;
 
 public class Utilities
 {
@@ -65,5 +66,18 @@ public class Utilities
             }
         }
     }
+   
+}
 
+
+public static class ReflectionHelper
+{
+    public static void CopyFields<T>(T target, T source)
+    {
+        var fields = typeof(T).GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        foreach (var field in fields)
+        {
+            field.SetValue(target, field.GetValue(source));
+        }
+    }
 }
