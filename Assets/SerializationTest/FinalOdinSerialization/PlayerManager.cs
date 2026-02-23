@@ -1,5 +1,7 @@
 using HelinTest.OdinSerializer;
 using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using UnityEngine;
 
 
@@ -27,6 +29,18 @@ namespace FinalSaveSystem
             //level = saveData.playerSaveData.level;
         }
 
+        public void UpdateAllValuesForTesting()
+        {
+            health = 10000;
+            level = 99;
+        }
+
+        public void PrintAllValues()
+        {
+            Debug.Log("------------PLAYER MANAGER-----------------");
+            Debug.Log($"health: {health}");
+            Debug.Log($"level: {level}");
+        }
     }
 }
 

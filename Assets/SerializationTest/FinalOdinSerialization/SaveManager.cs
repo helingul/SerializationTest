@@ -44,8 +44,25 @@ namespace FinalSaveSystem
             inventoryManager = new InventoryManager();
             playerManager = new PlayerManager();
             managers.Add(inventoryManager);
-            managers.Add(playerManager);    
+            managers.Add(playerManager);
         }
+
+        // this is added for testing purposes
+        public void UpdateAllValuesForTesting()
+        {
+
+            inventoryManager.UpdateAllValuesForTesting();
+            playerManager.UpdateAllValuesForTesting();
+        }
+
+        // this is added for testing purposes
+        public void PrintAllValuesForTesting()
+        {
+
+            inventoryManager.PrintAllValues();
+            playerManager.PrintAllValues();
+        }
+
         public void SaveGame()
         {
             GameSaveData save = new GameSaveData();

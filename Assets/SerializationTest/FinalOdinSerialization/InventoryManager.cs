@@ -40,6 +40,83 @@ namespace FinalSaveSystem
             //testNestedFloatArray = saveData.inventorySavaData.testNestedFloatArray;
             //testNestedFloatArray = saveData.inventorySavaData.testNestedFloatArray;
         }
+
+        public void UpdateAllValuesForTesting()
+        {
+            // Update list
+            items.Clear();
+            items.AddRange(new List<string> { "apple", "banana", "cherry" });
+
+            // Update integer
+            gold = 100;
+
+            // Update dictionary
+            testDictionary.Clear();
+            testDictionary.Add("key1", 10);
+            testDictionary.Add("key2", 20);
+
+            // Update DateTime
+            dateTime = DateTime.Now;
+
+            // Update int array
+            testIntArray = new int[] { 10, 20, 30, 40, 50 };
+
+            // Update nested float array
+            testNestedFloatArray = new float[][] {
+            new float[] { 2.2f, 2.2f },
+            new float[] { 3.3f, 3.3f }
+        };
+        }
+
+
+        public void PrintAllValues()
+        {
+            Debug.Log("------------INVENTORY MANAGER-----------------");
+            string logMessage = "";
+
+            // List
+            logMessage += "Items:\n";
+            foreach (var item in items)
+            {
+                logMessage += "- " + item + "\n";
+            }
+
+            // Integer
+            logMessage += $"Gold: {gold}\n";
+
+            // Dictionary
+            logMessage += "Dictionary:\n";
+            foreach (var kvp in testDictionary)
+            {
+                logMessage += $"- {kvp.Key}: {kvp.Value}\n";
+            }
+
+            // DateTime
+            logMessage += $"DateTime: {dateTime}\n";
+
+            // Int array
+            logMessage += "Int Array:\n";
+            foreach (var num in testIntArray)
+            {
+                logMessage += "- " + num + "\n";
+            }
+
+            // Nested float array
+            logMessage += "Nested Float Array:\n";
+            for (int i = 0; i < testNestedFloatArray.Length; i++)
+            {
+                logMessage += $"Row {i}: ";
+                for (int j = 0; j < testNestedFloatArray[i].Length; j++)
+                {
+                    logMessage += testNestedFloatArray[i][j] + " ";
+                }
+                logMessage += "\n";
+            }
+
+            // Single Debug.Log call
+            Debug.Log(logMessage);
+        }
+       
     }
 
 }
