@@ -74,7 +74,7 @@ namespace FinalSaveSystem
 
             byte[] bytes = SerializationUtility.SerializeValue(
                 save,
-                DataFormat.JSON
+                DataFormat.Binary
             );
 
             using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
@@ -104,7 +104,7 @@ namespace FinalSaveSystem
             GameSaveData save =
                 SerializationUtility.DeserializeValue<GameSaveData>(
                     bytes,
-                    DataFormat.JSON
+                    DataFormat.Binary
                 );
 
             if (save == null)
