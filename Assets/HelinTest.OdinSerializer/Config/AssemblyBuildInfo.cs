@@ -23,6 +23,7 @@ namespace HelinTest.OdinSerializer.Utilities.Editor
     using System;
     using System.Linq;
     using UnityEditor;
+    using UnityEditor.Build;
 
     public enum AssemblyImportSettings
     {
@@ -45,7 +46,8 @@ namespace HelinTest.OdinSerializer.Utilities.Editor
                 var buildGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
 
 #if UNITY_5_6_OR_NEWER
-                var backend = PlayerSettings.GetScriptingBackend(buildGroup);
+                NamedBuildTarget namedBuildTarget = NamedBuildTarget.FromBuildTargetGroup(buildGroup);
+                var backend = PlayerSettings.GetScriptingBackend(namedBuildTarget);
 #else
                 var backend = (ScriptingImplementation)PlayerSettings.GetPropertyInt("ScriptingBackend", buildGroup);
 #endif

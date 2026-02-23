@@ -20,19 +20,20 @@
 
 namespace HelinTest.OdinSerializer
 {
-    using System.Globalization;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Text;
-    using Utilities;
-    using UnityEngine;
-    using UnityEngine.Events;
     using System.Runtime.CompilerServices;
-    using UnityEngine.Assertions;
     using System.Runtime.Serialization;
+    using System.Text;
+    using UnityEditor;
+    using UnityEngine;
+    using UnityEngine.Assertions;
+    using UnityEngine.Events;
+    using Utilities;
 
 #if PREFAB_DEBUG && !SIRENIX_INTERNAL
 #warning "Prefab serialization debugging is enabled outside of Sirenix internal. Are you sure this is right?"
@@ -819,7 +820,7 @@ namespace HelinTest.OdinSerializer
                                 if (data.PrefabModificationsReferencedUnityObjects != null && data.PrefabModificationsReferencedUnityObjects.Count > 0)
                                 {
                                     //var prefabRoot = UnityEditor.PrefabUtility.FindPrefabRoot(((Component)data.Prefab).gameObject);
-                                    var instanceRoot = UnityEditor.PrefabUtility.FindPrefabRoot(((Component)unityObject).gameObject);
+                                    var instanceRoot = UnityEditor.PrefabUtility.GetOutermostPrefabInstanceRoot(((Component)unityObject).gameObject);
 
                                     foreach (var reference in data.PrefabModificationsReferencedUnityObjects)
                                     {
@@ -827,12 +828,12 @@ namespace HelinTest.OdinSerializer
                                         if (!(reference is GameObject || reference is Component)) continue;
                                         if (UnityEditor.AssetDatabase.Contains(reference)) continue;
 
-                                        var referencePrefabType = UnityEditor.PrefabUtility.GetPrefabType(reference);
+                                        var assetType = PrefabUtility.GetPrefabAssetType(reference);
+                                        var instanceStatus = PrefabUtility.GetPrefabInstanceStatus(reference);
 
-                                        bool mightBeInPrefab = referencePrefabType == UnityEditor.PrefabType.Prefab
-                                                            || referencePrefabType == UnityEditor.PrefabType.PrefabInstance
-                                                            || referencePrefabType == UnityEditor.PrefabType.ModelPrefab
-                                                            || referencePrefabType == UnityEditor.PrefabType.ModelPrefabInstance;
+                                        bool mightBeInPrefab =
+                                            assetType != PrefabAssetType.NotAPrefab ||
+                                            instanceStatus != PrefabInstanceStatus.NotAPrefab;
 
                                         if (!mightBeInPrefab)
                                         {
@@ -852,7 +853,7 @@ namespace HelinTest.OdinSerializer
                                         }
 
                                         var gameObject = (GameObject)(reference is GameObject ? reference : (reference as Component).gameObject);
-                                        var referenceRoot = UnityEditor.PrefabUtility.FindPrefabRoot(gameObject);
+                                        var referenceRoot = UnityEditor.PrefabUtility.GetOutermostPrefabInstanceRoot(gameObject);
 
                                         if (referenceRoot != instanceRoot)
                                         {
@@ -2621,13 +2622,13 @@ namespace HelinTest.OdinSerializer
                         {
                             if (!(n is GameObject)) return false;
 
-                            var prefabType = UnityEditor.PrefabUtility.GetPrefabType(n);
-                            return prefabType == UnityEditor.PrefabType.Prefab
-                                || prefabType == UnityEditor.PrefabType.ModelPrefab
-                                || prefabType == UnityEditor.PrefabType.PrefabInstance
-                                || prefabType == UnityEditor.PrefabType.ModelPrefabInstance;
+                            var assetType = PrefabUtility.GetPrefabAssetType(n);
+                            var instanceStatus = PrefabUtility.GetPrefabInstanceStatus(n);
+
+                            return assetType != PrefabAssetType.NotAPrefab ||
+                                   instanceStatus != PrefabInstanceStatus.NotAPrefab;
                         })
-                        .Select(n => UnityEditor.PrefabUtility.FindPrefabRoot((GameObject)n))
+                        .Select(n => UnityEditor.PrefabUtility.GetOutermostPrefabInstanceRoot((GameObject)n))
                         .Distinct();
 
                     foreach (var root in rootPrefabs)
