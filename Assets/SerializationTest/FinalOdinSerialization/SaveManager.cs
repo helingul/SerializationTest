@@ -72,15 +72,14 @@ namespace FinalSaveSystem
                 manager.Save(save);
             }
 
-            byte[] bytes = SerializationUtility.SerializeValue(
-                save,
-                DataFormat.Binary
-            );
+            byte[] bytes = SerializationUtility.SerializeValue(save,DataFormat.Binary);
 
-            using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
-            {
-                stream.Write(bytes, 0, bytes.Length);
-            }
+            File.WriteAllBytes(filePath, bytes);
+
+            //using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+            //{
+            //    stream.Write(bytes, 0, bytes.Length);
+            //}
 
             Debug.Log("Game Saved (Binary)");
         }
@@ -93,19 +92,15 @@ namespace FinalSaveSystem
                 return;
             }
 
-            byte[] bytes;
+            byte[] bytes = File.ReadAllBytes(filePath);
 
-            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                bytes = new byte[stream.Length];
-                stream.Read(bytes, 0, bytes.Length);
-            }
+            //using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            //{
+            //    bytes = new byte[stream.Length];
+            //    stream.Read(bytes, 0, bytes.Length);
+            //}
 
-            GameSaveData save =
-                SerializationUtility.DeserializeValue<GameSaveData>(
-                    bytes,
-                    DataFormat.Binary
-                );
+            GameSaveData save = SerializationUtility.DeserializeValue<GameSaveData>(bytes, DataFormat.Binary);
 
             if (save == null)
             {
