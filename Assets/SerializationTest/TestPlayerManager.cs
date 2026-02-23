@@ -23,6 +23,11 @@ namespace MultipleClassOdinTestSerializer
             saveData.health = 100;
             saveData.level = 1;
         }
+        public int Health
+        {
+            get => saveData.health;
+            set => saveData.health = value;
+        }
 
         public string GetSaveKey() => "PlayerManager";
 
