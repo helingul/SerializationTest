@@ -68,7 +68,9 @@ namespace FinalSaveSystem
 
     public class PlayerManager : ISaveable
     {
-        public int health;
+        [SerializeField]
+        private int health;
+        [NonSerialized]
         public int level;
 
         public void Save(GameSaveData saveData)
