@@ -15,8 +15,8 @@ namespace FinalSaveSystem
         void LoadData(GameSaveData saveData);
         void Save(GameSaveData saveData);
 
-        void LoadDataWithMemoryPack(GameSaveDataMemoryPack saveData);
-        void SaveWithMemoryPack(GameSaveDataMemoryPack saveData);
+        //void LoadDataWithMemoryPack(GameSaveDataMemoryPack saveData);
+        //void SaveWithMemoryPack(GameSaveDataMemoryPack saveData);
 
     }
 
@@ -25,18 +25,28 @@ namespace FinalSaveSystem
     {
         public int version = 1;
 
-        public InventorySaveData inventorySavaData;
-        public PlayerSaveData playerSaveData;
+        public InventoryManager inventoryManager;
+        public PlayerManager playerManager;
     }
 
-    [MemoryPackable]
-    public partial class GameSaveDataMemoryPack
-    {
-        public int version = 1;
 
-        public InventorySaveData inventorySavaData;
-        public PlayerSaveData playerSaveData;
-    }
+    //[Serializable]
+    //public class GameSaveData
+    //{
+    //    public int version = 1;
+
+    //    public InventorySaveData inventorySavaData;
+    //    public PlayerSaveData playerSaveData;
+    //}
+
+    //[MemoryPackable]
+    //public partial class GameSaveDataMemoryPack
+    //{
+    //    public int version = 1;
+
+    //    public InventorySaveData inventorySavaData;
+    //    public PlayerSaveData playerSaveData;
+    //}
 
     public class SaveManager : MonoBehaviour
     {
@@ -75,6 +85,7 @@ namespace FinalSaveSystem
             playerManager.PrintAllValues();
         }
 
+
         public void SaveGame()
         {
             GameSaveData save = new GameSaveData();
@@ -84,14 +95,9 @@ namespace FinalSaveSystem
                 manager.Save(save);
             }
 
-            byte[] bytes = SerializationUtility.SerializeValue(save,DataFormat.Binary);
+            byte[] bytes = SerializationUtility.SerializeValue(save, DataFormat.JSON);
 
             File.WriteAllBytes(filePath, bytes);
-
-            //using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
-            //{
-            //    stream.Write(bytes, 0, bytes.Length);
-            //}
 
             Debug.Log("Game Saved (Binary)");
         }
@@ -105,14 +111,7 @@ namespace FinalSaveSystem
             }
 
             byte[] bytes = File.ReadAllBytes(filePath);
-
-            //using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            //{
-            //    bytes = new byte[stream.Length];
-            //    stream.Read(bytes, 0, bytes.Length);
-            //}
-
-            GameSaveData save = SerializationUtility.DeserializeValue<GameSaveData>(bytes, DataFormat.Binary);
+            GameSaveData save = SerializationUtility.DeserializeValue<GameSaveData>(bytes, DataFormat.JSON);
 
             if (save == null)
             {
@@ -129,42 +128,96 @@ namespace FinalSaveSystem
         }
 
 
-        public void SaveGameWithMemoryPack()
-        {
-            GameSaveDataMemoryPack save = new GameSaveDataMemoryPack();
+        //public void SaveGame()
+        //{
+        //    GameSaveData save = new GameSaveData();
 
-            foreach (var manager in managers)
-            {
-                manager.SaveWithMemoryPack(save);
-            }
+        //    foreach (var manager in managers)
+        //    {
+        //        manager.Save(save);
+        //    }
 
-            byte[] bytes = MemoryPackSerializer.Serialize(save);
+        //    byte[] bytes = SerializationUtility.SerializeValue(save,DataFormat.Binary);
 
-            File.WriteAllBytes(filePath, bytes);
-        }
+        //    File.WriteAllBytes(filePath, bytes);
 
-        public void LoadGameWithMemoryPack()
-        {
-            if (!File.Exists(filePath))
-            {
-                Debug.Log("No Save File Found");
-                return;
-            }
+        //    //using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+        //    //{
+        //    //    stream.Write(bytes, 0, bytes.Length);
+        //    //}
 
-            byte[] bytes = File.ReadAllBytes(filePath);
-            GameSaveDataMemoryPack save = MemoryPackSerializer.Deserialize<GameSaveDataMemoryPack>(bytes);
+        //    Debug.Log("Game Saved (Binary)");
+        //}
 
-            if (save == null)
-            {
-                Debug.LogError("Save file corrupted");
-                return;
-            }
+        //public void LoadGame()
+        //{
+        //    if (!File.Exists(filePath))
+        //    {
+        //        Debug.Log("No Save File Found");
+        //        return;
+        //    }
 
-            foreach (var manager in managers)
-            {
-                manager.LoadDataWithMemoryPack(save);
-            }
-          
-        }
+        //    byte[] bytes = File.ReadAllBytes(filePath);
+
+        //    //using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+        //    //{
+        //    //    bytes = new byte[stream.Length];
+        //    //    stream.Read(bytes, 0, bytes.Length);
+        //    //}
+
+        //    GameSaveData save = SerializationUtility.DeserializeValue<GameSaveData>(bytes, DataFormat.Binary);
+
+        //    if (save == null)
+        //    {
+        //        Debug.LogError("Save file corrupted");
+        //        return;
+        //    }
+
+        //    foreach (var manager in managers)
+        //    {
+        //        manager.LoadData(save);
+        //    }
+
+        //    Debug.Log("Game Loaded (Binary)");
+        //}
+
+
+        //public void SaveGameWithMemoryPack()
+        //{
+        //    GameSaveDataMemoryPack save = new GameSaveDataMemoryPack();
+
+        //    foreach (var manager in managers)
+        //    {
+        //        manager.SaveWithMemoryPack(save);
+        //    }
+
+        //    byte[] bytes = MemoryPackSerializer.Serialize(save);
+
+        //    File.WriteAllBytes(filePath, bytes);
+        //}
+
+        //public void LoadGameWithMemoryPack()
+        //{
+        //    if (!File.Exists(filePath))
+        //    {
+        //        Debug.Log("No Save File Found");
+        //        return;
+        //    }
+
+        //    byte[] bytes = File.ReadAllBytes(filePath);
+        //    GameSaveDataMemoryPack save = MemoryPackSerializer.Deserialize<GameSaveDataMemoryPack>(bytes);
+
+        //    if (save == null)
+        //    {
+        //        Debug.LogError("Save file corrupted");
+        //        return;
+        //    }
+
+        //    foreach (var manager in managers)
+        //    {
+        //        manager.LoadDataWithMemoryPack(save);
+        //    }
+
+        //}
     }
 }
