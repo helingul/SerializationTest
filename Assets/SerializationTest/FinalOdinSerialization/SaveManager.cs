@@ -95,7 +95,7 @@ namespace FinalSaveSystem
                 manager.Save(save);
             }
 
-            byte[] bytes = SerializationUtility.SerializeValue(save, DataFormat.JSON);
+            byte[] bytes = SerializationUtility.SerializeValue(save, DataFormat.Binary);
 
             File.WriteAllBytes(filePath, bytes);
 
@@ -111,7 +111,7 @@ namespace FinalSaveSystem
             }
 
             byte[] bytes = File.ReadAllBytes(filePath);
-            GameSaveData save = SerializationUtility.DeserializeValue<GameSaveData>(bytes, DataFormat.JSON);
+            GameSaveData save = SerializationUtility.DeserializeValue<GameSaveData>(bytes, DataFormat.Binary);
 
             if (save == null)
             {
