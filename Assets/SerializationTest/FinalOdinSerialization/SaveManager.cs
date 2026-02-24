@@ -1,4 +1,5 @@
 using HelinTest.OdinSerializer;
+using MemoryPack;
 using MultipleClassOdinTestSerializer;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,9 @@ namespace FinalSaveSystem
         void LoadData(GameSaveData saveData);
         void Save(GameSaveData saveData);
 
+        void LoadDataWithMemoryPack(GameSaveDataMemoryPack saveData);
+        void SaveWithMemoryPack(GameSaveDataMemoryPack saveData);
+
     }
 
     [Serializable]
@@ -25,6 +29,14 @@ namespace FinalSaveSystem
         public PlayerSaveData playerSaveData;
     }
 
+    [MemoryPackable]
+    public partial class GameSaveDataMemoryPack
+    {
+        public int version = 1;
+
+        public InventorySaveData inventorySavaData;
+        public PlayerSaveData playerSaveData;
+    }
 
     public class SaveManager : MonoBehaviour
     {
@@ -114,6 +126,45 @@ namespace FinalSaveSystem
             }
 
             Debug.Log("Game Loaded (Binary)");
+        }
+
+
+        public void SaveGameWithMemoryPack()
+        {
+            GameSaveDataMemoryPack save = new GameSaveDataMemoryPack();
+
+            foreach (var manager in managers)
+            {
+                manager.SaveWithMemoryPack(save);
+            }
+
+            byte[] bytes = MemoryPackSerializer.Serialize(save);
+
+            File.WriteAllBytes(filePath, bytes);
+        }
+
+        public void LoadGameWithMemoryPack()
+        {
+            if (!File.Exists(filePath))
+            {
+                Debug.Log("No Save File Found");
+                return;
+            }
+
+            byte[] bytes = File.ReadAllBytes(filePath);
+            GameSaveDataMemoryPack save = MemoryPackSerializer.Deserialize<GameSaveDataMemoryPack>(bytes);
+
+            if (save == null)
+            {
+                Debug.LogError("Save file corrupted");
+                return;
+            }
+
+            foreach (var manager in managers)
+            {
+                manager.LoadDataWithMemoryPack(save);
+            }
+          
         }
     }
 }

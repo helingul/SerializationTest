@@ -1,3 +1,4 @@
+using MemoryPack;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +7,8 @@ using UnityEngine;
 namespace FinalSaveSystem
 {
     [Serializable]
-    public class InventorySaveData
+    [MemoryPackable]
+    public partial class InventorySaveData
     {
         public List<string> items = new List<string>();
         public int gold;
@@ -116,7 +118,17 @@ namespace FinalSaveSystem
             // Single Debug.Log call
             Debug.Log(logMessage);
         }
-       
+
+        public void LoadDataWithMemoryPack(GameSaveDataMemoryPack saveData)
+        {
+            ReflectionHelper.CopyFields(this, saveData.inventorySavaData);
+        }
+        public void SaveWithMemoryPack(GameSaveDataMemoryPack saveData)
+        {
+            saveData.inventorySavaData = this;
+           
+        }
+
     }
 
 }

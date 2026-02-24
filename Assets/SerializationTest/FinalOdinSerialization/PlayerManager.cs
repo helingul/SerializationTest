@@ -1,4 +1,5 @@
 using HelinTest.OdinSerializer;
+using MemoryPack;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -8,10 +9,21 @@ using UnityEngine;
 namespace FinalSaveSystem
 {
     [Serializable]
-    public class PlayerSaveData
+    [MemoryPackable]
+    public partial class PlayerSaveData
     {
+        public int version = 0;
         public int health;
         public int level;
+
+        //[MemoryPackOnDeserialized]
+        //private void OnDeserialized()
+        //{
+        //  if(version > 1)
+        //    {
+
+        //    }
+        //}
     }
 
     public class PlayerManager : PlayerSaveData, ISaveable
@@ -40,6 +52,17 @@ namespace FinalSaveSystem
             Debug.Log("------------PLAYER MANAGER-----------------");
             Debug.Log($"health: {health}");
             Debug.Log($"level: {level}");
+        }
+
+        public void LoadDataWithMemoryPack(GameSaveDataMemoryPack saveData)
+        {
+           ReflectionHelper.CopyFields(this, saveData.playerSaveData);
+        }
+
+        public void SaveWithMemoryPack(GameSaveDataMemoryPack saveData)
+        {
+            saveData.playerSaveData = this;
+            
         }
     }
 }

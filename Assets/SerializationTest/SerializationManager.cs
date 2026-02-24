@@ -15,6 +15,7 @@ public enum SerializationType
     UnityJsonSerialization,
     NewtonsoftJsonSerialization,
     TestSerializerWithOdin,
+    MemoryPack,
 
 }
 
@@ -54,6 +55,9 @@ public class SerializationManager : MonoBehaviour
             case SerializationType.TestSerializerWithOdin:
                 saveManager.SaveGame();
                 break;
+            case SerializationType.MemoryPack:
+                saveManager.SaveGameWithMemoryPack();
+                break;
             default:
                 break;
         }
@@ -87,6 +91,9 @@ public class SerializationManager : MonoBehaviour
                 break;
             case SerializationType.TestSerializerWithOdin:
                 saveManager.LoadGame();
+                break;
+            case SerializationType.MemoryPack:
+                saveManager.LoadGameWithMemoryPack();
                 break;
             default:
                 break;
