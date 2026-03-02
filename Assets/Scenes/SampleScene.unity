@@ -1483,7 +1483,7 @@ MonoBehaviour:
   multipleClassSerialization: {fileID: 1828953532}
   odinTestSerializer: {fileID: 1828953530}
   saveManager: {fileID: 1828953534}
-  serializationType: 8
+  serializationType: 7
 --- !u!114 &1828953534
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -66,12 +66,23 @@ namespace FinalSaveSystem
     //    }
     //}
 
+    public class TestClass
+    {
+        public int testInt;
+
+        public TestClass(int testInt)
+        {
+            this.testInt = testInt;
+        }
+    }
+
     public class PlayerManager : ISaveable
     {
         [SerializeField]
         private int health;
         [NonSerialized]
         public int level;
+        public TestClass testClass;
 
         public void Save(GameSaveData saveData)
         {
@@ -84,12 +95,14 @@ namespace FinalSaveSystem
 
             health = saveData.playerManager.health;
             level = saveData.playerManager.level;
+            testClass = saveData.playerManager.testClass;
         }
 
         public void UpdateAllValuesForTesting()
         {
             health = 10000;
             level = 99;
+            testClass = new TestClass(200);
         }
 
         public void PrintAllValues()
@@ -97,6 +110,7 @@ namespace FinalSaveSystem
             Debug.Log("------------PLAYER MANAGER-----------------");
             Debug.Log($"health: {health}");
             Debug.Log($"level: {level}");
+            Debug.Log($"testInt: {testClass.testInt}");
         }
     }
 }
